@@ -52,8 +52,7 @@ app.get('/climate/humidity/', (req, res) => {
         PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
         select ?city ?year ?humidity from <${GRAPHDB_CONTEXT_TEST}> where {?obs a qb:Observation. ?obs prop:cityid ?cityid filter regex(?cityid,'${req.params.cityid}').?obs prop:city ?city. ?obs prop:year ?year.?obs prop:humidity ?humidity.}`, { transform: "toJSON" })
     .then((result) => {
-        const finalResult = JSON.stringify(result, null, 2);
-        return res.json(finalResult);
+        return res.json(result);
     })
     .catch((err) => {
         console.log(err);
@@ -67,8 +66,7 @@ app.get('/climate/humidity/cityid=:cityid', (req, res) => {
         PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
         select ?city ?year ?humidity from <${GRAPHDB_CONTEXT_TEST}> where {?obs a qb:Observation.  ?obs prop:cityid ?cityid filter(?cityid = ${req.params.cityid}).?obs prop:city ?city.?obs prop:year ?year.?obs prop:humidity ?humidity.}`, { transform: "toJSON" })
     .then((result) => {
-        const finalResult = JSON.stringify(result, null, 2);
-        return res.json(finalResult);
+        return res.json(result);
     })
     .catch((err) => {
         console.log(err);
@@ -83,8 +81,7 @@ app.get('/climate/rainfall/cityid=:cityid', (req, res) => {
         PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
         select ?city ?year ?rainfall from <${GRAPHDB_CONTEXT_TEST}> where {?obs a qb:Observation. ?obs prop:cityid ?cityid filter(?cityid = ${req.params.cityid}).?obs prop:city ?city. ?obs prop:year ?year.?obs prop:rainfall ?rainfall.}`, { transform: "toJSON" })
     .then((result) => {
-        const finalResult = JSON.stringify(result, null, 2);
-        return res.json(finalResult);
+        return res.json(result);
     })
     .catch((err) => {
         console.log(err);
@@ -99,8 +96,7 @@ app.get('/climate/temperature/cityid=:cityid', (req, res) => {
         PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
         select ?city ?year ?temperature where {?obs a qb:Observation. ?obs prop:cityid ?cityid filter(?cityid = ${req.params.cityid}).?obs prop:city ?city. ?obs prop:year ?year.?obs prop:temperature ?temperature.}`, { transform: "toJSON" })
     .then((result) => {
-        const finalResult = JSON.stringify(result, null, 2);
-        return res.json(finalResult);
+        return res.json(result);
     })
     .catch((err) => {
         console.log(err);
@@ -115,8 +111,22 @@ app.get('/climate/temperature/cityid=:cityid/yearid=:yearid', (req, res) => {
         PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
         select ?city ?year ?temperature where {?obs a qb:Observation. ?obs prop:cityid ?cityid filter(?cityid = ${req.params.cityid}).?obs prop:yearid ?yearid filter(?yearid = ${req.params.yearid}).?obs prop:city ?city. ?obs prop:year ?year.?obs prop:temperature ?temperature.}`, { transform: "toJSON" })
     .then((result) => {
-        const finalResult = JSON.stringify(result, null, 2);
-        return res.json(finalResult);
+        return res.json(result);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
+
+//get temperature value by year
+app.get('/climate/temperature/year=:year', (req, res) => {
+    graphDBEndpoint
+    .query(
+        `PREFIX qb: <http://purl.org/linked-data/cube#>
+        PREFIX prop: <http://www.sda-research.ml/dc/climate/prop/>
+        select ?city ?year ?temperature where {?obs a qb:Observation.?obs prop:city ?city. ?obs prop:year ?year filter(?year = ${req.params.year}).?obs prop:temperature ?temperature.}`, { transform: "toJSON" })
+    .then((result) => {
+        return res.json(result);
     })
     .catch((err) => {
         console.log(err);
@@ -125,4 +135,4 @@ app.get('/climate/temperature/cityid=:cityid/yearid=:yearid', (req, res) => {
 
 app.get('/climate')
 
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`)); 
+app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));     
